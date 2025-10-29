@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Звукові ефекти кнопки</title>
+
+    <style>
+        button {
+            font-size: 20px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<button id="soundButton">Наведи або натисни</button>
+
+<script>
+
+    const clickSound = new Audio("1-title.mp3");
+
+    const btn = document.getElementById("soundButton");
+
+    
+    btn.addEventListener("mousedown", () => {
+        clickSound.pause();
+        clickSound.currentTime = 0;
+        clickSound.play().catch(err => console.log(err));
+    });
+
+</script>
+
+</body>
+</html>

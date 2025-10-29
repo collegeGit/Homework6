@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Фонова музика з індикатором</title>
+    <style>
+        #playIndicator {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: gray;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+
+<h3>Фонова музика
+    <div id="playIndicator"></div>
+</h3>
+
+<button id="toggleMusic">▶ Запустити музику</button>
+<button id="globalSound"> Увімкнути звук</button>
+<br><br>
+
+<label for="volumeControl">Гучність:</label>
+<input type="range" id="volumeControl" min="0" max="1" step="0.01" value="0.5">
+
+<script>
+    const backgroundMusic = new Audio("3-jungle-the-amazon.mp3");
+    backgroundMusic.loop = true;
+    backgroundMusic.volume = 0.5;
+
+    const toggleButton = document.getElementById("toggleMusic");
+    const volumeSlider = document.getElementById("volumeControl");
+    const indicator = document.getElementById("playIndicator");
+    const globalSoundButton = document.getElementById("globalSound");
+
+    let isSoundOn = true;
+
+    function updateIndicator() {
+        if (!isSoundOn || backgroundMusic.paused || backgroundMusic.volume === 0) {
+            indicator.style.backgroundColor = "gray";
+        } else {
+            indicator.style.backgroundColor = "green";
+        }
+    }
+
+    toggleButton.addEventListener("click", () => {
+        if (!isSoundOn) return;
+        if (backgroundMusic.paused) {
+            backgroundMusic.play().catch(err => console.log(err));
+            toggleButton.textContent = "⏸ Зупинити музику";
+        } else {
+            backgroundMusic.pause();
+            toggleButton.textContent = "▶ Запустити музику";
+        }
+        updateIndicator();
+    });
+
+    globalSoundButton.addEventListener("click", () => {
+        isSoundOn = !isSoundOn;
+        if (!isSoundOn) {
+            backgroundMusic.pause();
+            toggleButton.textContent = "▶ Запустити музику";
+        }
+        globalSoundButton.textContent = isSoundOn ? "🔊 Увімкнути звук" : "🔇 Вимкнути звук";
+        updateIndicator();
+    });
+
+    volumeSlider.addEventListener("input", (event) => {
+        backgroundMusic.volume = event.target.value;
+        updateIndicator();
+    });
+
+    backgroundMusic.addEventListener("play", updateIndicator);
+    backgroundMusic.addEventListener("pause", updateIndicator);
+
+    updateIndicator();
+</script>
+
+</body>
+</html>
